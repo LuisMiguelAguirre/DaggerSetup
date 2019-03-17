@@ -22,7 +22,7 @@ public class RamdomUserAdapter extends RecyclerView.Adapter<RamdomUserAdapter.Ra
     private Picasso picasso;
 
 
-    RamdomUserAdapter(MainActivity mainActivity, Picasso picasso) {
+    public RamdomUserAdapter(MainActivity mainActivity, Picasso picasso) {
         this.mainActivity = mainActivity;
         this.picasso = picasso;
     }
