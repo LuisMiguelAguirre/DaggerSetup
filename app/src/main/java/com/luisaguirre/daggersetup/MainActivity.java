@@ -8,7 +8,12 @@ import android.support.v7.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.luisaguirre.daggersetup.model.RandomUsers;
+import com.jakewharton.picasso.OkHttp3Downloader;
+import com.luisaguirre.daggersetup.di.ContextModule;
+import com.luisaguirre.daggersetup.di.DaggerRamdomUserComponent;
+import com.luisaguirre.daggersetup.di.RamdomUserComponent;
+import com.luisaguirre.daggersetup.model.RamdomUsers;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
@@ -24,66 +29,42 @@ import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
-    Retrofit retrofit;
     RecyclerView recyclerView;
     RamdomUserAdapter mAdapter;
+    private Picasso picasso;
+    private RamdomUserComponent daggerRamdomUserComponent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        daggerRamdomUserComponent = DaggerRamdomUserComponent.builder()
+                .contextModule(new ContextModule(this))
+                .build();
+
         initViews();
 
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
-
-        Timber.plant(new Timber.DebugTree());
-
-        File cacheFile = new File(this.getCacheDir(), "HttpCache");
-        cacheFile.mkdirs();
-
-        Cache cache = new Cache(cacheFile, 10 * 1000 * 1000); //10 MB
-
-
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-            @Override
-            public void log(String message) {
-                Timber.i(message);
-            }
-        });
-
-        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient okHttpClient = new OkHttpClient()
-                .newBuilder()
-                .cache(cache)
-                .addInterceptor(httpLoggingInterceptor)
-                .build();
-
-        retrofit = new Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl("https://randomuser.me/")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
+        picasso = daggerRamdomUserComponent.getPicasso();
 
         populateUsers();
     }
 
     private void populateUsers() {
-        Call<RandomUsers> randomUsersCall = getRandomUserService().getRandomUsers(10);
-        randomUsersCall.enqueue(new Callback<RandomUsers>() {
+        Call<RamdomUsers> randomUsersCall = daggerRamdomUserComponent.getRamdomUserService().getRamdomUsers(10);
+        randomUsersCall.enqueue(new Callback<RamdomUsers>() {
             @Override
-            public void onResponse(Call<RandomUsers> call, @NonNull Response<RandomUsers> response) {
-                if(response.isSuccessful()) {
-                    mAdapter = new RamdomUserAdapter();
+            public void onResponse(Call<RamdomUsers> call, @NonNull Response<RamdomUsers> response) {
+                if (response.isSuccessful()) {
+                    mAdapter = new RamdomUserAdapter(MainActivity.this, picasso);
                     mAdapter.setItems(response.body().getResults());
                     recyclerView.setAdapter(mAdapter);
                 }
             }
 
             @Override
-            public void onFailure(Call<RandomUsers> call, Throwable t) {
+            public void onFailure(Call<RamdomUsers> call, Throwable t) {
                 Timber.i(t.getMessage());
             }
         });
@@ -92,9 +73,5 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }
-
-    public RandomUsersApi getRandomUserService() {
-        return retrofit.create(RandomUsersApi.class);
     }
 }

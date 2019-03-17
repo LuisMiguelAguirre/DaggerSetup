@@ -1,6 +1,7 @@
 package com.luisaguirre.daggersetup;
 
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,24 +18,29 @@ import java.util.List;
 public class RamdomUserAdapter extends RecyclerView.Adapter<RamdomUserAdapter.RandomUserViewHolder> {
 
     private List<Result> resultList = new ArrayList<>();
+    private MainActivity mainActivity;
+    private Picasso picasso;
 
 
-    public RamdomUserAdapter() {
+    RamdomUserAdapter(MainActivity mainActivity, Picasso picasso) {
+        this.mainActivity = mainActivity;
+        this.picasso = picasso;
     }
 
+    @NonNull
     @Override
-    public RandomUserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RandomUserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_random_user,
                 parent, false);
         return new RandomUserViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(RandomUserViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RandomUserViewHolder holder, int position) {
         Result result = resultList.get(position);
         holder.textView.setText(String.format("%s %s", result.getName().getFirst(),
                 result.getName().getLast()));
-        Picasso.with(holder.imageView.getContext())
+        picasso.with(mainActivity)
                 .load(result.getPicture().getLarge())
                 .into(holder.imageView);
     }
