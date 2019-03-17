@@ -1,8 +1,9 @@
-package com.luisaguirre.daggersetup.di;
+package com.luisaguirre.daggersetup.di.module;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.luisaguirre.daggersetup.RamdomUsersApi;
+import com.luisaguirre.daggersetup.di.RamdomUserApplicationScope;
 
 import dagger.Module;
 import dagger.Provides;
@@ -13,6 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module(includes = {OkHttpClientModule.class})
 public class RamdomUsersModule {
 
+    @RamdomUserApplicationScope
     @Provides
     public RamdomUsersApi randomUsersApi(Retrofit retrofit){
         return retrofit.create(RamdomUsersApi.class);
