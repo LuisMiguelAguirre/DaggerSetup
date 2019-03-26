@@ -1,12 +1,13 @@
 package component.daggercomponent;
 
 import component.MainApplication;
-import component.daggermodule.ActivityModule;
 import component.daggermodule.PresenterModule;
+import component.dependecies.ContextActivityFake;
 import component.dependecies.PresenterFake;
+import dagger.BindsInstance;
 import dagger.Subcomponent;
 
-@Subcomponent(modules = {PresenterModule.class, ActivityModule.class})
+@Subcomponent(modules = {PresenterModule.class})
 public interface PresenterSubComponent {
 
     PresenterFake getPresenter();
@@ -15,8 +16,7 @@ public interface PresenterSubComponent {
 
     @Subcomponent.Builder
     interface Builder {
-        PresenterSubComponent.Builder activityModule(ActivityModule activityModule);
+        @BindsInstance Builder activityContext(ContextActivityFake contextActivityFake);
         PresenterSubComponent build();
     }
-
 }

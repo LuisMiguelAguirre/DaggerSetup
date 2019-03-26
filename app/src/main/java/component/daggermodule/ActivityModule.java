@@ -4,6 +4,7 @@ import component.dependecies.ContextActivityFake;
 import dagger.Module;
 import dagger.Provides;
 
+@Deprecated
 @Module
 public class ActivityModule {
     ContextActivityFake contextActivityFake;
