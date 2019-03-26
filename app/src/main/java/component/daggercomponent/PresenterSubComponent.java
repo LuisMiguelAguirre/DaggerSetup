@@ -15,7 +15,6 @@ public interface PresenterSubComponent {
 
     @Subcomponent.Builder
     interface Builder {
-        PresenterSubComponent.Builder presenterModule(PresenterModule presenterModule);
         PresenterSubComponent.Builder activityModule(ActivityModule activityModule);
         PresenterSubComponent build();
     }

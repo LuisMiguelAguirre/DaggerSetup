@@ -1,16 +1,13 @@
 package component.daggermodule;
 
-import component.dependecies.ContextActivityFake;
-import component.dependecies.ContextAppFake;
+import component.dependecies.IPresenterFake;
 import component.dependecies.PresenterFake;
+import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
 
 @Module
-public class PresenterModule {
+public abstract class PresenterModule {
 
-    @Provides
-    public PresenterFake providesPresenterFake(ContextActivityFake contextActivityFake, ContextAppFake contextAppFake) {
-        return new PresenterFake(contextActivityFake, contextAppFake);
-    }
+    @Binds
+    public abstract IPresenterFake providesPresenterFake(PresenterFake presenterFake);
 }

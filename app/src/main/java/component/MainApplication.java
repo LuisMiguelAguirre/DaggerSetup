@@ -5,7 +5,6 @@ import component.daggercomponent.DaggerAppComponent;
 import component.daggercomponent.PresenterSubComponent;
 import component.daggermodule.ActivityModule;
 import component.daggermodule.AppModule;
-import component.daggermodule.PresenterModule;
 import component.dependecies.ContextActivityFake;
 import component.dependecies.ContextAppFake;
 import component.dependecies.PresenterFake;
@@ -21,7 +20,6 @@ public class MainApplication {
         daggerAppComponent.getRetrofit();
 
         PresenterSubComponent presenterSubComponent = daggerAppComponent.presenterSubComponentBuilder()
-                .presenterModule(new PresenterModule())
                 .activityModule(new ActivityModule(new ContextActivityFake()))
                 .build();
 
