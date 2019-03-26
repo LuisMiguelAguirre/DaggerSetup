@@ -1,7 +1,5 @@
 package component;
 
-import javax.inject.Inject;
-
 import component.daggercomponent.AppComponent;
 import component.daggercomponent.DaggerAppComponent;
 import component.daggercomponent.PresenterSubComponent;
@@ -22,15 +20,14 @@ public class MainApplication {
 
         daggerAppComponent.getRetrofit();
 
-        PresenterSubComponent presenterSubComponent = daggerAppComponent
-                .plusPresenterSubComponent(new PresenterModule(), new ActivityModule(new ContextActivityFake()));
+        PresenterSubComponent presenterSubComponent = daggerAppComponent.presenterSubComponentBuilder()
+                .presenterModule(new PresenterModule())
+                .activityModule(new ActivityModule(new ContextActivityFake()))
+                .build();
 
         PresenterFake presenterFake = presenterSubComponent.getPresenter();
 
-
         presenterFake.println();
-
-
     }
 
 }

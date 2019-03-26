@@ -11,6 +11,5 @@ public interface AppComponent {
 
     RetrofitFake getRetrofit();
 
-    PresenterSubComponent plusPresenterSubComponent(PresenterModule presenterModule, ActivityModule activityModule);
-
+    PresenterSubComponent.Builder presenterSubComponentBuilder();
 }
